@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Analyze any Codeforces profile with deep statistics and AI coaching insights.">
+  <title>CF Pulse — Codeforces Profile Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="CF Pulse home">
+      <span class="brand-mark">CF</span>
+      <span>Pulse</span>
+    </a>
+    <div class="header-meta">
+      <span class="live-dot"></span>
+      Codeforces API live
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="eyebrow"><span>01</span> Competitive intelligence</div>
+      <h1>See the coder<br><em>behind the handle.</em></h1>
+      <p class="hero-copy">Turn public Codeforces data into a clear performance story: trajectory, habits, strengths, blind spots, and an AI-built training plan.</p>
+
+      <form class="search-box" id="search-form">
+        <span class="prompt-mark">&gt;_</span>
+        <label class="sr-only" for="handle-input">Codeforces handle</label>
+        <input id="handle-input" name="handle" placeholder="Enter a Codeforces handle" autocomplete="off" spellcheck="false" maxlength="24">
+        <button type="submit" id="analyze-button">
+          <span>Analyze profile</span>
+          <span class="button-arrow">↗</span>
+        </button>
+      </form>
+      <div class="search-footer">
+        <div id="recent-searches" class="recent-searches"></div>
+        <span>Try <button class="text-button sample-handle" data-handle="tourist">tourist</button> or <button class="text-button sample-handle" data-handle="Benq">Benq</button></span>
+      </div>
+    </section>
+
+    <section class="loading-panel hidden" id="loading-panel" aria-live="polite">
+      <div class="loader-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div>
+        <strong id="loading-title">Retrieving submissions</strong>
+        <p id="loading-copy">Reading the signal in the noise...</p>
+      </div>
+    </section>
+
+    <section class="error-panel hidden" id="error-panel" role="alert">
+      <span class="error-icon">!</span>
+      <div><strong>Analysis interrupted</strong><p id="error-message"></p></div>
+      <button id="dismiss-error" aria-label="Dismiss error">×</button>
+    </section>
+
+    <section class="dashboard hidden" id="dashboard">
+      <div class="profile-banner card">
+        <div class="profile-identity">
+          <img id="profile-avatar" class="avatar" alt="">
+          <div>
+            <div class="label">Profile intelligence report</div>
+            <h2 id="profile-handle"></h2>
+            <p id="profile-name" class="muted"></p>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <a id="cf-link" class="ghost-button" target="_blank" rel="noreferrer">Open profile ↗</a>
+          <button id="download-report" class="primary-button">Download report ↓</button>
+        </div>
+      </div>
+
+      <div class="stat-grid" id="stat-grid"></div>
+
+      <div class="dashboard-grid">
+        <article class="card chart-card span-8">
+          <div class="card-heading">
+            <div><span class="kicker">Momentum</span><h3>Rating trajectory</h3></div>
+            <div class="chart-legend"><span></span><span id="rating-change"></span></div>
+          </div>
+          <div class="canvas-wrap"><canvas id="rating-chart"></canvas></div>
+        </article>
+
+        <article class="card ai-card span-4">
+          <div class="ai-orb"><span></span></div>
+          <div class="card-heading">
+            <div><span class="kicker">Gemini coach</span><h3 id="ai-headline">Reading the pattern</h3></div>
+            <span class="ai-badge" id="ai-source">AI</span>
+          </div>
+          <p id="ai-summary" class="ai-summary">Building a focused assessment from the profile data.</p>
+          <div class="insight-block">
+            <span>Strengths</span>
+            <ul id="ai-strengths"></ul>
+          </div>
+          <div class="insight-block">
+            <span>Next moves</span>
+            <ul id="ai-next-steps"></ul>
+          </div>
+        </article>
+
+        <article class="card span-7">
+          <div class="card-heading">
+            <div><span class="kicker">Skill map</span><h3>Topic performance</h3></div>
+            <span class="muted small">Solved / attempted</span>
+          </div>
+          <div id="topic-bars" class="topic-bars"></div>
+        </article>
+
+        <article class="card span-5">
+          <div class="card-heading">
+            <div><span class="kicker">Submission DNA</span><h3>Verdict breakdown</h3></div>
+          </div>
+          <div class="donut-layout">
+            <div class="donut" id="verdict-donut"><div><strong id="acceptance-rate">0%</strong><span>accepted</span></div></div>
+            <div id="verdict-legend" class="donut-legend"></div>
+          </div>
+        </article>
+
+        <article class="card span-8">
+          <div class="card-heading">
+            <div><span class="kicker">Consistency</span><h3>Activity pulse</h3></div>
+            <span class="muted small">Last 365 days</span>
+          </div>
+          <div id="heatmap" class="heatmap"></div>
+          <div class="heatmap-footer"><span>Less</span><i></i><i></i><i></i><i></i><i></i><span>More</span></div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-heading"><div><span class="kicker">Toolkit</span><h3>Languages</h3></div></div>
+          <div id="language-list" class="language-list"></div>
+        </article>
+
+        <article class="card span-12">
+          <div class="card-heading">
+            <div><span class="kicker">Problem range</span><h3>Difficulty distribution</h3></div>
+            <span id="comfort-zone" class="pill"></span>
+          </div>
+          <div id="difficulty-chart" class="difficulty-chart"></div>
+        </article>
+      </div>
+      <p class="report-note">Analysis uses public Codeforces data. AI observations are coaching suggestions, not objective judgments.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>CF Pulse / built on public signals</span>
+    <span>Not affiliated with Codeforces</span>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>
